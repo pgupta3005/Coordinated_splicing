@@ -1,6 +1,6 @@
 # Coordinated_splicing
 
-## Pre-requisites (should be present in the working directory in addition to the six scripts 1-6)
+## Pre-requisites (should be present in the working directory in addition to the scripts)
 
 ### Files to be made
 
@@ -12,11 +12,13 @@ Should have entries for *'gene'*, *'exon'*, and *'transcript'* as the third colu
 (A) One called *'ref_names'* with the first column as a short-hand notation of the reference(s) used and the second column as the name of the GTF file (in the working directory, with the extension), and (B) the other called *'sample_names'* with the first column as a short-hand notation for the samples used, the second column as the name of the count matrix (with entension, if any), and the third column as short-hand notation of their respective genomes. An example for each index file is provided.
 
 ### R packages to be installed
+The following packages can be installed before use or via step0_install.R or while running wrapper_script.R directly
+Installed either in the default R lib or in a new conda package [the setup must remain when running the wrapper_script.sh]
 
 ```{r}
 install.packages("dplyr")
 install.packages("tibble")
-install.packages("parallel")  #if not installed by default
+install.packages("parallel")
 install.packages("BiocManager")
 BiocManager::install("rtracklayer")
 BiocManager::install("GenomicFeatures")
@@ -24,36 +26,37 @@ BiocManager::install("GenomicFeatures")
 
 ### Running the scripts
 
-## shebang line ? - change to the output of 'which Rscript'
-
-#### Run it as - possible options
-
 ```{r}
-Rscript stepn_xyz.R
-Rscript stepn_xyz.R arg
-nohup Rscript stepn_xyz.R > log.out &
-nohup Rscript stepn_xyz.R arg > log.out &
+bash wrapper_script.sh arg1 arg2 arg3
+nohup bash wrapper_script.sh arg1 arg2 arg3 > log_out &
 ```
-The intermediate files can be big in size, it is recommended to run the scripts on a server/HPC.
 
-#### Steps 1, 2, 5, and 6 have components that can be parallelized. As defaults, these scripts take one-fourth, one-eighth, one-tenth and one-tenth of the available cores, repectively. If the user wishes to use lesser or more threads, they can specify the number of threads as the arg for these scripts.
+arg1 is the number of threads while genenrating 2 index files for each genome GTF used (step1) [default takes one-fourth of the available threads]
 
-#### Step 6 also allows adding **gene name** annotation from the gtf file (if present) in the final output. Default: no information is added. To add this info, add *'annot'* as the second argument after specifiying the number of threads for script 6.
+agr2 is the number of threads for other subsequent steps (steps 2/5/6) [default takes one-eighth of the available threads]
+
+arg3 can be empty or *annot* if the GTF file contains gene_name can that info should be added to the final output .csv file
+
+As the intermediate files can be big in size, it is recommended to run the pipeline on a server/HPC.
 
 ## Scripts and their significance
 
-### Step 1
+### Step 0: Installing some basic CRAN and BiocManager packages
 
-### Step 2
+### Step 1: Indexing the genome GTFs
+Outputs --> txdb_<genome> and tx_<genome>.RDS and exon_<genome>.RDS
 
-### Step 3
+### Step 2: Filtering
+Outputs --> df_exon_<sample>.RDS and df_tx_<sample>.RDS 
 
-### Step 4
+### Step 3: Demarcating true full-length vs truncated trasncripts
+Outputs --> df_exon_<sample>_final.RDS and df_tx_<sample>_final.RDS 
 
-### Step 5
+### Step 4: Identifying alternative and constitutive exons
+Outputs --> constitutive_<sample>.RDS and non_constitutive_<sample>.RDS
 
-### Step 6
+### Step 5: Making exon pairs and assigning positions
+Outputs --> table_<sample>.RDS
 
-
-
-
+### Step 6: Final calculations
+Outputs --> filled_<sample>.csv
