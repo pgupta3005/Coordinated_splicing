@@ -1,0 +1,26 @@
+structural_category	associated_gene	associated_transcript	counts
+1	full-splice_match	ENSG1	ENST1	10
+2	full-splice_match	ENSG2	ENST2	20
+3	full-splice_match	ENSG3	ENST3	15
+4	full-splice_match	ENSG3	ENST4	2
+5	full-splice_match	ENSG4	ENST5	20
+6	full-splice_match	ENSG4	ENST6	3
+7	full-splice_match	ENSG4	ENST7	2
+8	full-splice_match	ENSG5	ENST8	7
+9	full-splice_match	ENSG5	ENST9	6
+10	full-splice_match	ENSG5	ENST10	11
+11	full-splice_match	ENSG6	ENST11	10
+12	full-splice_match	ENSG6	ENST12	10
+13	full-splice_match	ENSG6	ENST13	1
+14	full-splice_match	ENSG7	ENST14	10
+15	full-splice_match	ENSG7	ENST15	1
+16	full-splice_match	ENSG7	ENST16	10
+17	full-splice_match	ENSG8	ENST17	12
+18	full-splice_match	ENSG8	ENST18	2
+19	full-splice_match	ENSG8	ENST19	3
+20	full-splice_match	ENSG8	ENST20	20
+21	full-splice_match	ENSG8	ENST21	9
+22	full-splice_match	ENSG9	ENST22	11
+23	full-splice_match	ENSG9	ENST23	12
+24	full-splice_match	ENSG10	ENST24	15
+25	full-splice_match	ENSG10	ENST25	12
