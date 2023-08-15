@@ -123,6 +123,8 @@ final_func=function(x){
   co_inc<-val_a/(val_a + val_b + val_c + val_d)
   
   sig<-(val_a + val_d)/(val_a + val_b + val_c + val_d)
+
+  sigpr<-(val_b + val_c)/(val_a + val_b + val_c + val_d)
   
   mat<-matrix(c(val_a, val_b, val_c, val_d), nrow=2, ncol=2)
   f<-fisher.test(mat)
@@ -146,7 +148,7 @@ final_func=function(x){
     take_ahead <- "yes"
   }
 
-  empty_string<-paste(empty_string, total, co_inc, sig, p, lor, take_ahead, sep="_")
+  empty_string<-paste(empty_string, total, co_inc, sig, sigpr, p, lor, take_ahead, sep="_")
   
   return(empty_string)
 }
@@ -178,9 +180,10 @@ for(s in 1:length(var_names))
   table1$total<-sapply(sp,"[[",2)
   table1$co_inc<-sapply(sp,"[[",3)
   table1$sigma<-sapply(sp,"[[",4)
-  table1$pval<-sapply(sp,"[[",5)
-  table1$LOR<-sapply(sp,"[[",6)
-  table1$take_ahead<-sapply(sp,"[[",7)
+  table1$sigmaprime<-sapply(sp,"[[",5)
+  table1$pval<-sapply(sp,"[[",6)
+  table1$LOR<-sapply(sp,"[[",7)
+  table1$take_ahead<-sapply(sp,"[[",8)
 
   #print(as.data.frame(table1))
   
@@ -190,7 +193,7 @@ for(s in 1:length(var_names))
   table1<-table1[,-14] 
 
   #changing the columns from character to numeric datatype (check!!)
-  for(i in 8:12)
+  for(i in 8:13)
     table1[,i]<-as.numeric(table1[,i])
 
   ###################################################
@@ -217,11 +220,20 @@ for(s in 1:length(var_names))
   }
   
   write.csv(table2, paste0("filled_", var_names[s], ".csv"), quote=F)
+  saveRDS(table2, paste0("filled_", var_names[s], ".RDS"))
 
   table3<-subset(table2, cor_pval<0.05)
+
+  MI <- subset(table3, LOR > 0)
+  ME <- subset(table3, LOR < 0)
+
+  MI_sub <- subset(MI, co_inc > 0.3 & sigma > 0.7 & sigmaprime < 0.3)
+  ME_sub <- subset(ME, sigma < 0.3 & sigmaprime > 0.7)
+
+  table4 <- rbind(MI_sub, ME_sub)
   
-  print(paste(nrow(table3), "exonchunk pairs (from", length(unique(table3$GENEID)), "genes) out of", nrow(table2), "exonchunk pairs (from", length(unique(table2$GENEID)), "genes) show coordinated splicing"))
+  print(paste(nrow(table4), "exonchunk pairs (from", length(unique(table4$GENEID)), "genes) out of", nrow(table2), "exonchunk pairs (from", length(unique(table2$GENEID)), "genes) show coordinated splicing"))
   
-  #saveRDS(table3, paste("significant_", var_names[s], ".RDS", sep=""))
+  saveRDS(table4, paste("significant_", var_names[s], ".RDS", sep=""))
   
 }
