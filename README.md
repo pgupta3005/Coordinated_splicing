@@ -44,19 +44,19 @@ As the intermediate files can be big in size, it is recommended to run the pipel
 ### Step 0: Installing some basic CRAN and BiocManager packages
 
 ### Step 1: Indexing the genome GTFs
-Outputs --> txdb_<genome> and tx_<genome>.RDS and exon_<genome>.RDS
+Outputs --> txdb_\<genome> and tx_\<genome>.RDS and exon_\<genome>.RDS
 
 ### Step 2: Filtering
-Outputs --> df_exon_<sample>.RDS and df_tx_<sample>.RDS 
+Outputs --> df_exon_\<sample>.RDS and df_tx_\<sample>.RDS 
 
 ### Step 3: Demarcating true full-length vs truncated trasncripts
-Outputs --> df_exon_<sample>_final.RDS and df_tx_<sample>_final.RDS 
+Outputs --> df_exon_\<sample>_final.RDS and df_tx_\<sample>_final.RDS 
 
 ### Step 4: Identifying alternative and constitutive exons
-Outputs --> constitutive_<sample>.RDS and non_constitutive_<sample>.RDS
+Outputs --> constitutive_\<sample>.RDS and non_constitutive_\<sample>.RDS
 
 ### Step 5: Making exon pairs and assigning positions
-Outputs --> table_<sample>.RDS
+Outputs --> table_\<sample>.RDS
 
 ### Step 6: Final calculations
-Outputs --> filled_<sample>.csv
+Outputs --> filled_\<sample>.csv, filled_\<sample>.RDS, significant_\<sample>.RDS 
