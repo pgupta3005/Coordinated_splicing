@@ -341,6 +341,69 @@ for(s in 1:length(var_names))
   list_of_gene<-list_of_gene[!(list_of_gene %in% blk_list_genes)]
   
   print(paste("new genes are", length(list_of_gene)))
+
+  ##############################################################################################
+  ### Part J: removing transcripts with overlapping exons at start of one and end of another ###
+  ##############################################################################################
+  
+  blk_list_txs <- list()
+  
+  for(i in list_of_gene)
+  {
+    tx_df_sub <- subset(df_tx, GENEID == i)
+    tmp_mat <- combn(nrow(tx_df_sub), 2)
+    for(j in 1:ncol(tmp_mat))    # for all pairs of transcripts
+    {
+      tx1_exonchunks <- unlist(tx_df_sub[tmp_mat[1,j], "EXONCHUNK"])
+      tx2_exonchunks <- unlist(tx_df_sub[tmp_mat[2,j], "EXONCHUNK"])
+      
+      common_exonchunks <- intersect(tx1_exonchunks, tx2_exonchunks)
+      
+      
+      if((length(common_exonchunks) > 0) & (length(common_exonchunks) != length(tx1_exonchunks)) & (length(common_exonchunks) != length(tx2_exonchunks)))   # if there are common exonchunks between the two transcripts
+      {
+        a1 <- which(tx1_exonchunks %in% common_exonchunks)
+        a2 <- which(tx2_exonchunks %in% common_exonchunks)
+        
+        if(length(common_exonchunks) == 1){
+          
+          if(a1 > a2){
+            if(a2 == 1 & a1 == length(tx1_exonchunks)){
+              blk_list_txs <- append(blk_list_txs, tx_df_sub[tmp_mat[1,j], "TXNAME"])
+              blk_list_txs <- append(blk_list_txs, tx_df_sub[tmp_mat[2,j], "TXNAME"])
+            }
+          } else {
+            if(a1 == 1 & a1 == length(tx2_exonchunks)){
+              blk_list_txs <- append(blk_list_txs, tx_df_sub[tmp_mat[1,j], "TXNAME"])
+              blk_list_txs <- append(blk_list_txs, tx_df_sub[tmp_mat[2,j], "TXNAME"])
+            }
+          }
+        } else {
+          if(all(diff(a1) == 1) & all(diff(a2) == 1))   # if the common exonchunks are one-after-the-other in both transcripts
+          {
+            # here
+            if((max(a2) == length(tx2_exonchunks) & min(a1) == 1)| 
+               (max(a1) == length(tx1_exonchunks) & min(a2) == 1)){
+              blk_list_txs <- append(blk_list_txs, tx_df_sub[tmp_mat[1,j], "TXNAME"])
+              blk_list_txs <- append(blk_list_txs, tx_df_sub[tmp_mat[2,j], "TXNAME"])
+            }
+            
+          }
+        }
+      }
+    }
+  }
+  
+  blk_list_txs <- unique(unlist(blk_list_txs))
+  df_tx <- subset(df_tx, !(TXNAME %in% blk_list_txs))
+
+  ## then again remove genes with only one transcript
+  
+  tb <- as.data.frame(table(unlist(df_tx$GENEID)))
+  tb <- subset(tb, Freq>1)
+  list_of_gene <- as.character(tb$Var1)  
+  
+  print(paste("new total genes are", length(list_of_gene), sep=" "))
   
   df_tx<-subset(df_tx, unlist(GENEID) %in% list_of_gene)
   
