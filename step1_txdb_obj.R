@@ -11,13 +11,14 @@ library(parallel)
 ### read files and take user inputs ###
 #######################################
 
-## There should be a tab separated file named 'ref_names' with 
-## the first col is a short name for the ref (for example - the species' three-letter notation)
-## the second col is the name of the reference gtf (genome annotation file) with extension - in the working directory
+## There should be a tab separated file named 'sample_names' with
+## the first col is a short name for the sample
+## the second col is the filename of the counts 
+## the third col is the name of the reference gtf (genome annotation file) with extension
 
-a<-read.table("ref_names", sep="\t", header=F)
+a<-read.table("sample_names", sep="\t", header=F)
 species_names<-a[,1]     ##define species name
-reference_names<-a[,2]   #define filenames for reference
+reference_names<-a[,3]   #define filenames for reference
 
 #Accept number of threads from user as the first argument after the scriptname
 
