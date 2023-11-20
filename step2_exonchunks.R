@@ -21,7 +21,7 @@ var_names<-b[,1]
 file_names<-b[,2]
 species_names<-b[,3]   #these until now are repeated, but will be made unique for every sample
 
-num_threads<-as.integer(detectCores()/8) ##default
+num_threads<-as.integer(detectCores()/3) ##default
 
 tmp<-commandArgs(trailingOnly = TRUE)
 if(length(tmp)==1)
@@ -30,17 +30,17 @@ if(length(tmp)==1)
 for(s in 1:length(var_names))
 {
   assign(var_names[s], read.table(file_names[s], header=T, sep="\t"))
-  tmp<-readRDS(paste0("tx_", species_names[s], ".RDS"))
+  tmp<-readRDS(paste0("tx_", var_names[s], ".RDS"))
   assign(paste0("tx_",var_names[s]), tmp)
   assign(paste0("df_tx_",var_names[s]), as.data.frame(tmp))
-  tmp<- readRDS(paste0("exon_", species_names[s], ".RDS"))
+  tmp<- readRDS(paste0("exon_", var_names[s], ".RDS"))
   assign(paste0("exon_",var_names[s]),tmp)
   assign(paste0("df_exon_",var_names[s]), as.data.frame(tmp))
 }
 
 rm(tmp)
 
-col_txid<-"associated_transcript"
+col_txid<-"isoform"
 col_counts<-"counts"
 
 #####################################################
@@ -194,6 +194,7 @@ for(s in 1:length(var_names))
     blacklist<-list()
     count<-1
     #print(i)
+
     start_list<-df_exon[row_num,"start"]
     end_list<-df_exon[row_num,"end"]
   
@@ -243,7 +244,7 @@ for(s in 1:length(var_names))
 
   blk_list_genes<-list()
   
-  for(i in df_exon$GENEID)
+  for(i in unique(unlist(df_exon$GENEID)))
   {
     exonchunk_count<-length(unique(subset(df_exon, GENEID==i)$EXONCHUNK))
     if(exonchunk_count<=2)
@@ -271,7 +272,7 @@ for(s in 1:length(var_names))
   df_tx<-subset(df_tx, unlist(GENEID) %in% list_of_gene)
  
   print("adding exonchunk info to df_tx")
-  newID<-mclapply(df_tx[,"temp_EXONNAME"], IDconverterCHUNK, mc.cores=num_threads)   #quite fast
+  newID<-mclapply(df_tx[,"temp_EXONNAME"], IDconverterCHUNK, mc.cores=num_threads)
   df_tx$EXONCHUNK<-newID
 
   #################################################################
@@ -341,7 +342,7 @@ for(s in 1:length(var_names))
   list_of_gene<-list_of_gene[!(list_of_gene %in% blk_list_genes)]
   
   print(paste("new genes are", length(list_of_gene)))
-
+  
   ##############################################################################################
   ### Part J: removing transcripts with overlapping exons at start of one and end of another ###
   ##############################################################################################
@@ -354,17 +355,23 @@ for(s in 1:length(var_names))
     tmp_mat <- combn(nrow(tx_df_sub), 2)
     for(j in 1:ncol(tmp_mat))    # for all pairs of transcripts
     {
-      tx1_exonchunks <- unlist(tx_df_sub[tmp_mat[1,j], "EXONCHUNK"])
-      tx2_exonchunks <- unlist(tx_df_sub[tmp_mat[2,j], "EXONCHUNK"])
+      tx1_exonchunks <- unique(unlist(tx_df_sub[tmp_mat[1,j], "EXONCHUNK"]))
+      tx2_exonchunks <- unique(unlist(tx_df_sub[tmp_mat[2,j], "EXONCHUNK"]))
+# unique to remove dual exons demarcated as one chunk 
       
       common_exonchunks <- intersect(tx1_exonchunks, tx2_exonchunks)
+      common_exonchunks <- common_exonchunks[!(common_exonchunks == "NA")]
       
-      
-      if((length(common_exonchunks) > 0) & (length(common_exonchunks) != length(tx1_exonchunks)) & (length(common_exonchunks) != length(tx2_exonchunks)))   # if there are common exonchunks between the two transcripts
+      if((length(common_exonchunks) > 0) & (length(common_exonchunks) != length(tx1_exonchunks)) & (length(common_exonchunks) != length(tx2_exonchunks)))
+# if there are common exonchunks between the two transcripts
       {
         a1 <- which(tx1_exonchunks %in% common_exonchunks)
         a2 <- which(tx2_exonchunks %in% common_exonchunks)
-        
+        if((length(common_exonchunks) == 1) & (length(a1)!=length(a2))){
+          print(i)
+          print(j)
+        }
+
         if(length(common_exonchunks) == 1){
           
           if(a1 > a2){
@@ -396,7 +403,7 @@ for(s in 1:length(var_names))
   
   blk_list_txs <- unique(unlist(blk_list_txs))
   df_tx <- subset(df_tx, !(TXNAME %in% blk_list_txs))
-
+  
   ## then again remove genes with only one transcript
   
   tb <- as.data.frame(table(unlist(df_tx$GENEID)))
@@ -416,5 +423,6 @@ for(s in 1:length(var_names))
   saveRDS(x, paste0(var_names[s], "_used.RDS"))
   print(paste0(var_names[s], "_used.RDS saved"))
 
-}
+  print(warnings())
 
+}
