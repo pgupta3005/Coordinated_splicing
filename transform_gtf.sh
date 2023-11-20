@@ -5,6 +5,9 @@ source ~/miniconda3/bin/activate env1
 INPUT_DIR=$PWD
 OUTPUT_DIR=$PWD
 
+# ${i}.collapsed_classification.filtered_lite.gtf is the output from FLAIR
+# ${i}_3.gtf can be used for this pipeline
+
 while read i
 do
 gffread -E --keep-genes ${i}.collapsed_classification.filtered_lite.gtf -o- > ${i}_1.gtf
