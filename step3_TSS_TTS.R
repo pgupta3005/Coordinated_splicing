@@ -57,14 +57,14 @@ for(s in 1:length(var_names))
       for(j in 1:nrow(l1))
       {
         #compare longer %in% shorter tx wrt EXONCHUNK
-        e1<-unlist(df_tx[df_tx$TXNAME==l1[j,1],"EXONCHUNK"])
-        e2<-unlist(df_tx[df_tx$TXNAME==l1[j,2],"EXONCHUNK"])
+        e1<-unique(unlist(df_tx[df_tx$TXNAME==l1[j,1],"EXONCHUNK"]))
+        e2<-unique(unlist(df_tx[df_tx$TXNAME==l1[j,2],"EXONCHUNK"]))
         
         #print(e1)
         #print(e2)
         
         if(length(e1)>=length(e2)) {
-          if(all(diff(which(e1 %in% e2))==1) && length(intersect(e1,e2))==length(e2))
+          if(all(diff(which(e1 %in% e2))==1) && length(intersect(e1,e2))==length(e2) && !(identical(e1,e2)))
             short_tx<-append(short_tx,l1[j,2])
         } else {
           if(all(diff(which(e2 %in% e1))==1) && length(intersect(e1,e2))==length(e1))
@@ -93,7 +93,7 @@ for(s in 1:length(var_names))
     tx_name<-df_tx[i,"TXNAME"]
     if(tx_name %in% short_tx)
     {
-      e<-unlist(df_tx[i,"EXONCHUNK"])
+      e<-unique(unlist(df_tx[i,"EXONCHUNK"]))
       df_tx[i,"TSS"]<-e[1]
       df_tx[i,"TTS"]<-e[length(e)]
       
