@@ -11,9 +11,8 @@ library(parallel)
 ### read files and initialise variables ###
 ###########################################
 
-a<-read.table("ref_names", sep="\t", header=F)
-species_names<-a[,1]     ##define species name
-reference_names<-a[,2] 
+a<-read.table("sample_names", sep="\t", header=F)
+species_names<-a[,1]     ##define species name 
 
 annot<-""  #default value
 num_threads<-as.integer(detectCores()/8) ##default
@@ -42,7 +41,7 @@ if(annot=="annot")
 b<-read.table("sample_names", sep="\t", header=F)
 var_names<-b[,1]
 #file_names<-b[,2]
-species_names<-b[,3] ###reassigning species_name variable imp
+#species_names<-b[,3] ###reassigning species_name variable imp
 
 for(s in 1:length(var_names))
 {
@@ -53,14 +52,14 @@ for(s in 1:length(var_names))
 }
 
 col_counts <- "counts"
-col_txid <- "associated_transcript"
+col_txid <- "isoform"
 
 ########################
 ### Define functions ###
 ########################
 
 final_func=function(x){
-  temp<-unlist(strsplit(x, "x"))
+  temp<-unlist(strsplit(x, ","))
   gene<-temp[[1]]
   exon1<-temp[[2]]
   exon2<-temp[[3]]
@@ -173,8 +172,8 @@ for(s in 1:length(var_names))
   sp<-strsplit(unlist(output), "_")
   head(sp)
   
-  new_mat<-matrix(nrow=nrow(table1), ncol=7)
-  colnames(new_mat)<-c("total","co_inc","sigma","pval","LOR","cor_pval","take_ahead")
+  new_mat<-matrix(nrow=nrow(table1), ncol=8)
+  colnames(new_mat)<-c("total","co_inc","sigma","sigmaprime","pval","LOR","cor_pval","take_ahead")
   table1<-cbind(table1,new_mat)
   
   table1$total<-sapply(sp,"[[",2)
@@ -219,7 +218,7 @@ for(s in 1:length(var_names))
     table2<-left_join(table2, tmp, by=c("GENEID"="gene_id"))
   }
   
-  write.csv(table2, paste0("filled_", var_names[s], ".csv"), quote=F)
+  write.table(table2, paste0("filled_", var_names[s], ".tsv"), quote=F, sep = "\t", row.names = F)
   saveRDS(table2, paste0("filled_", var_names[s], ".RDS"))
 
   table3<-subset(table2, cor_pval<0.05)
@@ -230,8 +229,8 @@ for(s in 1:length(var_names))
   MI_sub <- subset(MI, co_inc > 0.3 & sigma > 0.7 & sigmaprime < 0.3)
   ME_sub <- subset(ME, sigma < 0.3 & sigmaprime > 0.7)
 
-  table4 <- rbind(MI_sub, ME_sub)
-  
+  table4 <- rbind(MI_sub, ME_sub)  
+
   print(paste(nrow(table4), "exonchunk pairs (from", length(unique(table4$GENEID)), "genes) out of", nrow(table2), "exonchunk pairs (from", length(unique(table2$GENEID)), "genes) show coordinated splicing"))
   
   saveRDS(table4, paste("significant_", var_names[s], ".RDS", sep=""))
