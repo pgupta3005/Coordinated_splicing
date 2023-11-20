@@ -15,7 +15,7 @@ var_names<-b[,1]
 #file_names<-b[,2]
 #species_names<-b[,3]
 
-col_txid<-"associated_transcript"
+col_txid<-"isoform"
 col_counts<-"counts"
 
 for(s in 1:length(var_names))
