@@ -1,4 +1,4 @@
-!#!/bin/bash
+#!/bin/bash
 
 source ~/miniconda3/bin/activate env1
 
