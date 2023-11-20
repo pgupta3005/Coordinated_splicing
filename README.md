@@ -5,11 +5,11 @@
 ### Files to be made
 
 #### 1. **Tab-separated count matrices** for every sample 
-Two columns are mandatory with *'associated_transcript'* and *'counts'* column names. Transcripts under the 'associated_transcript' column should be present in the GTF file.
-#### 2. **Genome annotation GTF file** 
-Should have entries for *'gene'*, *'exon'*, and *'transcript'* as the third column; the meta-data column (9th) must have gene_id, tx_id and exon_id wherever relevant. An example GTF file is uploaded.
-#### 3. **Two tab-separated (with no header) index files** 
-(A) One called *'ref_names'* with the first column as a short-hand notation of the reference(s) used and the second column as the name of the GTF file (in the working directory, with the extension), and (B) the other called *'sample_names'* with the first column as a short-hand notation for the samples used, the second column as the name of the count matrix (with entension, if any), and the third column as short-hand notation of their respective genomes. An example for each index file is provided.
+Two columns are mandatory with *'isoform'* and *'counts'* column names. Transcripts under the 'isoform' column should be present in the GTF file.
+#### 2. **Transcriptome GTF file** 
+Such a file is typically generated as a part of trnascriptome reconstruction from long-read (using Stringtie or FLAIR). It should have entries for *'gene'*, *'exon'*, and *'transcript'* as the third column; the meta-data column (9th) must have gene_id, tx_id and exon_id wherever relevant. Additional tools/steps such as gffread, agat and sed may be required to convert a transcriptome GTF file into script-compatible format (transform_gtf.sh can be used as a reference). An example GTF file is uploaded. 
+#### 3. **One tab-separated (with no header) index file** 
+It is named *'sample_names'* with the first column as a short-hand notation of the samples (to be used as a prefix for outputs of all steps), the second column as the filename of the count matrix (including the extension, if any), and the third column as the filename of the transcriptome GTF file (including the extension). An example index file is provided.
 
 ### R packages to be installed
 The following packages can be installed before use or via step0_install.R or while running wrapper_script.R directly
@@ -44,7 +44,7 @@ As the intermediate files can be big in size, it is recommended to run the pipel
 ### Step 0: Installing some basic CRAN and BiocManager packages
 
 ### Step 1: Indexing the genome GTFs
-Outputs --> txdb_\<genome> and tx_\<genome>.RDS and exon_\<genome>.RDS
+Outputs --> txdb_\<sample> and tx_\<sample>.RDS and exon_\<sample>.RDS
 
 ### Step 2: Filtering
 Outputs --> df_exon_\<sample>.RDS and df_tx_\<sample>.RDS 
@@ -59,4 +59,4 @@ Outputs --> constitutive_\<sample>.RDS and non_constitutive_\<sample>.RDS
 Outputs --> table_\<sample>.RDS
 
 ### Step 6: Final calculations
-Outputs --> filled_\<sample>.csv, filled_\<sample>.RDS, significant_\<sample>.RDS 
+Outputs --> filled_\<sample>.tsv, filled_\<sample>.RDS, significant_\<sample>.RDS 
