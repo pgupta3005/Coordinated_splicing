@@ -35,7 +35,7 @@ for(s in 1:length(var_names))
 ################################################################################
 
 RelPos=function(x){
-  temp=strsplit(x,"x")
+  temp=strsplit(x,",")
   gene=temp[[1]][1]
   exon1<-temp[[1]][2]
   exon2<-temp[[1]][3]
@@ -122,7 +122,7 @@ for(s in 1:length(var_names))
   }
   
   table1<-as.data.frame(table1)
-  table1$combine<-paste(table1$GENEID, table1$EXONCHUNK1, table1$EXONCHUNK2, sep="x")
+  table1$combine<-paste(table1$GENEID, table1$EXONCHUNK1, table1$EXONCHUNK2, sep=",")
   
   print(paste("made", nrow(table1), "exon pairs from", length(unique(table1$GENEID)), "genes"))
   
