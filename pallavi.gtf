@@ -124,7 +124,8 @@ chr10	PALLAVI	exon	751	900	.	+	.	"gene_id ""ENSG10""; transcript_id ""ENST24""; 
 chr10	PALLAVI	exon	1501	1800	.	+	.	"gene_id ""ENSG10""; transcript_id ""ENST24""; exon_number 4; exon_id ""ENSE46"""
 chr10	PALLAVI	exon	2401	2700	.	+	.	"gene_id ""ENSG10""; transcript_id ""ENST24""; exon_number 5; exon_id ""ENSE47"""
 chr10	PALLAVI	transcript	1501	4150	.	+	.	"gene_id ""ENSG10""; transcript_id ""ENST25"""
-chr10	PALLAVI	exon	1501	1800	.	+	.	"gene_id ""ENSG10""; transcript_id ""ENST25""; exon_number 1; exon_id ""ENSE48"""
-chr10	PALLAVI	exon	2401	2700	.	+	.	"gene_id ""ENSG10""; transcript_id ""ENST25""; exon_number 2; exon_id ""ENSE49"""
-chr10	PALLAVI	exon	3351	3500	.	+	.	"gene_id ""ENSG10""; transcript_id ""ENST25""; exon_number 3; exon_id ""ENSE50"""
-chr10	PALLAVI	exon	4001	4150	.	+	.	"gene_id ""ENSG10""; transcript_id ""ENST25""; exon_number 4; exon_id ""ENSE51"""
+chr10	PALLAVI	exon	1501	1800	.	+	.	"gene_id ""ENSG10""; transcript_id ""ENST25""; exon_number 1; exon_id ""ENSE46"""
+chr10	PALLAVI	exon	2401	2700	.	+	.	"gene_id ""ENSG10""; transcript_id ""ENST25""; exon_number 2; exon_id ""ENSE47"""
+chr10	PALLAVI	exon	3351	3500	.	+	.	"gene_id ""ENSG10""; transcript_id ""ENST25""; exon_number 3; exon_id ""ENSE48"""
+
+chr10	PALLAVI	exon	4001	4150	.	+	.	"gene_id ""ENSG10""; transcript_id ""ENST25""; exon_number 4; exon_id ""ENSE49"""
