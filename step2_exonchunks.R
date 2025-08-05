@@ -340,6 +340,9 @@ for(s in 1:length(var_names))
   
   blk_list_genes<-unlist(blk_list_genes)
   list_of_gene<-list_of_gene[!(list_of_gene %in% blk_list_genes)]
+
+  df_tx <- subset(df_tx, GENEID %in% list_of_gene)
+  print(paste("total transcripts are", length(unique(df_tx$TXNAME))))
   
   print(paste("new genes are", length(list_of_gene)))
   
