@@ -422,6 +422,11 @@ for(s in 1:length(var_names))
   saveRDS(df_tx, paste0("df_tx_", var_names[s], ".RDS"))
   print(paste0("df_tx_", var_names[s], ".RDS saved"))
 
+  df_exon<-subset(df_exon, unlist(GENEID) %in% list_of_gene)
+  
+  saveRDS(df_exon, paste0("df_exon_", var_names[s], ".RDS"))
+  print(paste0("df_exon_", var_names[s], ".RDS saved"))
+
   x<-x[(x[,col_txid] %in% df_tx$TXNAME),]
   saveRDS(x, paste0(var_names[s], "_used.RDS"))
   print(paste0(var_names[s], "_used.RDS saved"))
